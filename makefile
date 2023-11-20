@@ -2,15 +2,14 @@ CC=g++
 CFLAGS=-I. -g
 OBJ = GameMechs.o objPos.o objPosArrayList.o MacUILib.o Player.o Project.o 
 DEPS = *.h
-#POSTLINKER = -lncurses   ## uncomment this if on Linux
+# POSTLINKER = -lncurses   ## uncomment this if on Linux
 EXEC = Project
 
-%.o: %.cpp $(DEPENDS)
+%.o: %.cpp $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-${EXEC} : $(OBJ)
-	$(CC) -o $@ $^ $(CFLAGS) ${POSTLINKER}
+$(EXEC): $(OBJ)
+	$(CC) -o $@ $^ $(CFLAGS) $(POSTLINKER)
 
-clean :
-	rm -r ${OBJ} ${EXEC} ${EXEC}.exe
-
+clean:
+	rm -r $(OBJ) $(EXEC) $(EXEC).exe

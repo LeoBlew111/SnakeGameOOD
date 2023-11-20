@@ -1,117 +1,68 @@
 #include <iostream>
 #include "MacUILib.h"
 #include "objPos.h"
-
+#include "GameMechs.h"
 
 using namespace std;
 
-//gloabl consts
+// Global consts
 #define DELAY_CONST 100000
 
-//global vars
-bool exitFlag;
-objPos border[56];      //FIXME may want to be reference instead?
-
-void Initialize(void);
-void GetInput(void);
-void RunLogic(void);
-void DrawScreen(void);
-void LoopDelay(void);
-void CleanUp(void);
-
+// set gameMechanics as instance of GameMechs
+void Initialize(GameMechs &gameMechanics);
+void RunGameLoop(GameMechs &gameMechanics);
+void CleanUp(GameMechs &gameMechanics);
 
 
 int main(void)
 {
+    GameMechs gameMechanics;
 
-    Initialize();
+    Initialize(gameMechanics);
 
-    while(exitFlag == false)  
-    {
-        GetInput();
-        RunLogic();
-        DrawScreen();
-        LoopDelay();
-    }
+    RunGameLoop(gameMechanics);
 
-    CleanUp();
+    CleanUp(gameMechanics);
 
+    return 0;
 }
 
-
-void Initialize(void)
+void Initialize(GameMechs &gameMechanics)
 {
     MacUILib_init();
     MacUILib_clearScreen();
 
-    exitFlag = false;
+    // Initialize the game mechanics
+    gameMechanics = GameMechs();  
+    // more init ?
+}
 
-    //initalize border
-    int borderIndex = 0;
-    for (int i = 0; i < 10/*FIXME change to fit border size from gameMechanics*/; i++)      //rows or y values
+void RunGameLoop(GameMechs &gameMechanics)
+{
+    while (!gameMechanics.getExitFlagStatus())
     {
-        for(int j = 0; j < 20/*FIXME change to fit border size from gameMechanics*/; j++)       //columns or x values
-        {
-            if ( ( (i == 0) || (i == (10/*FIXME change to fit border size from gameMechanics*/ - 1) ) ) || ( (0 == j) || ( (20/*FIXME change to fit border size from gameMechanics*/ - 1) == j) ) )
-            {
-                border[borderIndex] = objPos(j, i, '#');
-                borderIndex++;
-            }
-        }
-    }
-}
+        // Input collection
+        char userInput = MacUILib_getChar();
+        gameMechanics.setInput(userInput);
 
-void GetInput(void)
-{
-   
-}
+        // Run game logic
+        gameMechanics.RunLogic();
 
-void RunLogic(void)
-{
-    
-}
+        // Draw screen
+        // ... (use gameMechanics methods for drawing dunno if need to add or not ??)
 
-void DrawScreen(void)
-{
-    MacUILib_clearScreen();  
-
-    
-
-    for (int i = 0; i < 10/*FIXME change to fit border size from gameMechanics*/; i++)      //rows or y values
-    {
-        for(int j = 0; j < 20/*FIXME change to fit border size from gameMechanics*/; j++)       //columns or x values
-        {
-            //FIXME implement print player
-            //FIXME implement print collectables
-            if ( ( (i == 0) || (i == (10/*FIXME change to fit border size from gameMechanics*/ - 1) ) ) || ( (0 == j) || ( (20/*FIXME change to fit border size from gameMechanics*/ - 1) == j) ) )
-            {
-                for (int k = 0; k < 56/*FIXME change to fit border size from gameMechanics*/; k++)
-                {
-                    if ( (border[k].x == j) && (border[k].y == i) )
-                    {
-                        MacUILib_printf("%c", border[k].symbol);
-                    }
-                }
-            }
-            else
-            {
-                MacUILib_printf(" ");
-            }
-        }
-        MacUILib_printf("\n");
+        // Loop delay
+        MacUILib_Delay(DELAY_CONST);
     }
 
+    // Display end-game messages using gameMechanics methods if needed
 }
 
-void LoopDelay(void)
+void CleanUp(GameMechs &gameMechanics)
 {
-    MacUILib_Delay(DELAY_CONST); // 0.1s delay
-}
-
-
-void CleanUp(void)
-{
-    MacUILib_clearScreen();    
-  
+    MacUILib_clearScreen();
     MacUILib_uninit();
+
+    // Perform any additional cleanup using the game mechanics object proly clear memory
+    
 }

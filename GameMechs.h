@@ -9,36 +9,61 @@
 
 using namespace std;
 
+enum Direction { STOP, UP, DOWN, LEFT, RIGHT };
 
-class GameMechs
-{
-    // Construct the remaining declaration from the project manual.
+class GameMechs {
+public:
 
-    // Only some sample members are included here
+    void RunLogic();
+    void ChangeDirection(char input);
 
-    // You will include more data members and member functions to complete your design.
+    //lose flag and debug
+    void DebugIncrementScore();
+    void DebugSetLoseFlag(); 
+    
 
-    private:
-        char input;
-        bool exitFlag;
-        
-        int boardSizeX;
-        int boardSizeY;
+    // Constructors and Destructor
+    GameMechs();
+    GameMechs(int boardX, int boardY);
+    ~GameMechs();
 
-    public:
-        GameMechs();
-        GameMechs(int boardX, int boardY);
-        
-        bool getExitFlagStatus();
-        void setExitTrue();
+    // Getter and setter for exit flag
+    bool getExitFlagStatus() const;
+    void setExitTrue();
 
-        char getInput();
-        void setInput(char this_input);
-        void clearInput();
+    // Getter and setter for L flag
+    bool getLoseFlagStatus() const;
+    void setLoseFlag();
 
-        int getBoardSizeX();
-        int getBoardSizeY();
-      
+    // Getter and setter for input
+    char getInput() const;
+    void setInput(char thisInput);
+
+    // Clear input method
+    void clearInput();
+
+    // Getter methods for board dimensions
+    int getBoardSizeX() const;
+    int getBoardSizeY() const;
+
+    // Getter method for the game score
+    int getScore() const;
+
+    // Specialized setter to increment the score
+    void incrementScore();
+
+private:
+    Direction MOV;
+    int speed;
+
+    char input;
+    bool exitFlag;
+    bool loseFlag;
+    int score;
+    int boardSizeX;
+    int boardSizeY;
+
+    Direction dir_tracker[2]; // temporary direction tracker for no oposite turn
 
 };
 
