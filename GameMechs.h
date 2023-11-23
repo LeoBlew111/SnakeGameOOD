@@ -1,3 +1,5 @@
+#define DEFAULT_BOARD_X_SIZE 20
+#define DEFAULT_BOARD_Y_SIZE 10
 #ifndef GAMEMECHS_H
 #define GAMEMECHS_H
 
@@ -13,14 +15,13 @@ enum Direction { STOP, UP, DOWN, LEFT, RIGHT };
 
 class GameMechs {
 public:
+    //define the array of border objects using board x and y size
+    objPos border[(2*DEFAULT_BOARD_X_SIZE) + (2*(DEFAULT_BOARD_Y_SIZE))];       //FIXME need to be able to change board size?
 
-    void RunLogic();
-    void ChangeDirection(char input);
 
-    //lose flag and debug
+    //lose flag and debug       FIXME
     void DebugIncrementScore();
     void DebugSetLoseFlag(); 
-    
 
     // Constructors and Destructor
     GameMechs();
@@ -28,32 +29,38 @@ public:
     ~GameMechs();
 
     // Getter and setter for exit flag
-    bool getExitFlagStatus() const;
+    bool getExitFlagStatus();
     void setExitTrue();
 
     // Getter and setter for L flag
-    bool getLoseFlagStatus() const;
+    bool getLoseFlagStatus();
     void setLoseFlag();
 
     // Getter and setter for input
-    char getInput() const;
+    char getInput();
     void setInput(char thisInput);
 
     // Clear input method
     void clearInput();
 
     // Getter methods for board dimensions
-    int getBoardSizeX() const;
-    int getBoardSizeY() const;
+    int getBoardSizeX();
+    int getBoardSizeY();
 
     // Getter method for the game score
-    int getScore() const;
+    int getScore();
 
     // Specialized setter to increment the score
     void incrementScore();
 
+    // Main logic
+    void runLogic();
+
+    // Initalize border
+    void initalizeBorder();
+
+
 private:
-    Direction MOV;
     int speed;
 
     char input;
@@ -62,8 +69,6 @@ private:
     int score;
     int boardSizeX;
     int boardSizeY;
-
-    Direction dir_tracker[2]; // temporary direction tracker for no oposite turn
 
 };
 

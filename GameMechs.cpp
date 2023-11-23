@@ -1,14 +1,40 @@
 #include <iostream>  
 #include "GameMechs.h"
+#include "MacUILib.h"
+
 
 // a bunch of emty getter and setter
 // Constructors and Destructor
-GameMechs::GameMechs() : exitFlag(false), loseFlag(false), score(0), boardSizeX(60), boardSizeY(30) {
+GameMechs::GameMechs() {
     // Additional actions during default construction
+    exitFlag = false; 
+    loseFlag = false;
+    score = 0;
+    input = 0;
+    speed = 1;
+    boardSizeX = DEFAULT_BOARD_X_SIZE;
+    boardSizeY = DEFAULT_BOARD_Y_SIZE;
+
+    /*int speed;
+
+    char input;
+    bool exitFlag;
+    bool loseFlag;
+    int score;
+    int boardSizeX;
+    int boardSizeY;*/
 }
 
-GameMechs::GameMechs(int boardX, int boardY) : exitFlag(false), loseFlag(false), score(0), boardSizeX(boardX), boardSizeY(boardY) {
+GameMechs::GameMechs(int boardX, int boardY) {
     // Additional actions during parameterized construction
+    exitFlag = false; 
+    loseFlag = false;
+    score = 0;
+    input = 0;
+    speed = 1;
+    boardSizeX = boardX;
+    boardSizeY = boardY;
+    
 }
 
 GameMechs::~GameMechs() {
@@ -16,7 +42,7 @@ GameMechs::~GameMechs() {
 }
 
 // Getter and setter for exit flag
-bool GameMechs::getExitFlagStatus() const {
+bool GameMechs::getExitFlagStatus() {
     return exitFlag;
 }
 
@@ -25,7 +51,7 @@ void GameMechs::setExitTrue() {
 }
 
 
-bool GameMechs::getLoseFlagStatus() const {
+bool GameMechs::getLoseFlagStatus() {
     return loseFlag;
 }
 
@@ -33,15 +59,22 @@ void GameMechs::setLoseFlag() {
     loseFlag = true;
 }
 
-char GameMechs::getInput() const {
+char GameMechs::getInput() {
+    if (MacUILib_hasChar())       //if have a char
+    {
+        setInput(MacUILib_getChar());     //set input to user input     
+    }
+    else        //redundant for readability
+    {
+        clearInput();
+    }
+
     return input;
 }
 
-void GameMechs::setInput(char thisInput) {
+void GameMechs::setInput(char thisInput) {      //setter for given char
     input = thisInput;
 }
-<<<<<<< HEAD
-=======
 
 // Clear input 
 void GameMechs::clearInput() {
@@ -49,16 +82,16 @@ void GameMechs::clearInput() {
 }
 
 // Getter methods for board dimensions
-int GameMechs::getBoardSizeX() const {
+int GameMechs::getBoardSizeX() {
     return boardSizeX;
 }
 
-int GameMechs::getBoardSizeY() const {
+int GameMechs::getBoardSizeY() {
     return boardSizeY;
 }
 
 // Getter method for the game score
-int GameMechs::getScore() const {
+int GameMechs::getScore() {
     return score;
 }
 
@@ -68,150 +101,27 @@ void GameMechs::incrementScore() {
     // Add additional logic if needed
 }
 
-//PPA import
-void GameMechs::RunLogic() {
-    if (input != 0) {
-        // Debug: press i to increment score press l to set lost
-        if (input == 'i') {
-            DebugIncrementScore();
-        } else if (input == 'l') {
-            DebugSetLoseFlag();
-        } else {
-    
-            ChangeDirection(input);
-            
+void GameMechs::runLogic() {        //FIXME need this?
+       
+}
+
+void GameMechs::initalizeBorder()       //FIXME     dont need anymore
+{
+    //int borderArraySize = (2*boardSizeX) + ( 2* (boardSizeY - 2)) ;
+    //border[borderArraySize];
+
+    int borderIndex = 0;
+    for (int i = 0; i < boardSizeY; i++)      //rows or y values
+    {
+        for(int j = 0; j < boardSizeX; j++)       //columns or x values
+        {
+            if ( ( (i == 0) || (i == (boardSizeY - 1) ) ) || ( (0 == j) || ( (boardSizeX - 1) == j) ) )
+            {
+                border[borderIndex] = objPos(j, i, '#');
+                borderIndex++;
+            }
         }
-
-        input = 0; 
     }
-
-    dir_tracker[1] = dir_tracker[0];
-    dir_tracker[0] = MOV;
-}
-
-//PPA import
-void GameMechs::ChangeDirection(char input) {
-    switch (input) {
-        case '\x1B': // esc to exit 
-            setExitTrue();
-            break;
-        case 'w':
-            if (MOV != DOWN) {
-                MOV = UP;
-            }
-            break;
-        case 's':
-            if (MOV != UP) {
-                MOV = DOWN;
-            }
-            break;
-        case 'a':
-            if (MOV != RIGHT) {
-                MOV = LEFT;
-            }
-            break;
-        case 'd':
-            if (MOV != LEFT) {
-                MOV = RIGHT;
-            }
-            break;
-
-        default:
-            break;
-    }
-
-// not sure if need to add direction check for left dont go right etc or not
-}
-
-void GameMechs::DebugIncrementScore() {
-    incrementScore();
-    cout << "Debug: Score Incremented. New Score: " << getScore() << endl;
-}
-
-void GameMechs::DebugSetLoseFlag() {
-    setLoseFlag();
-    cout << "Debug: Lose Flag Set." << endl;
-}
->>>>>>> ba704c5181f8f7e7d4ae73c659fdb5938c76943e
-
-// Clear input 
-void GameMechs::clearInput() {
-    input = 0;
-}
-
-// Getter methods for board dimensions
-int GameMechs::getBoardSizeX() const {
-    return boardSizeX;
-}
-
-int GameMechs::getBoardSizeY() const {
-    return boardSizeY;
-}
-
-// Getter method for the game score
-int GameMechs::getScore() const {
-    return score;
-}
-
-//  setter to increment the score
-void GameMechs::incrementScore() {
-    score++;
-    // Add additional logic if needed
-}
-
-//PPA import
-void GameMechs::RunLogic() {
-    if (input != 0) {
-        // Debug: press i to increment score press l to set lost
-        if (input == 'i') {
-            DebugIncrementScore();
-        } else if (input == 'l') {
-            DebugSetLoseFlag();
-        } else {
-    
-            ChangeDirection(input);
-            
-        }
-
-        input = 0; 
-    }
-
-    dir_tracker[1] = dir_tracker[0];
-    dir_tracker[0] = MOV;
-}
-
-//PPA import
-void GameMechs::ChangeDirection(char input) {
-    switch (input) {
-        case '\x1B': // esc to exit 
-            setExitTrue();
-            break;
-        case 'w':
-            if (MOV != DOWN) {
-                MOV = UP;
-            }
-            break;
-        case 's':
-            if (MOV != UP) {
-                MOV = DOWN;
-            }
-            break;
-        case 'a':
-            if (MOV != RIGHT) {
-                MOV = LEFT;
-            }
-            break;
-        case 'd':
-            if (MOV != LEFT) {
-                MOV = RIGHT;
-            }
-            break;
-
-        default:
-            break;
-    }
-
-// not sure if need to add direction check for left dont go right etc or not
 }
 
 void GameMechs::DebugIncrementScore() {

@@ -1,18 +1,30 @@
 #include "Player.h"
 
 
+
 Player::Player(GameMechs* thisGMRef)
 {
     mainGameMechsRef = thisGMRef;
     myDir = STOP;
 
     // more actions to be included
-    playerPos.setObjPos( (mainGameMechsRef->getBoardSizeX() / 2), 
-                         (mainGameMechsRef->getBoardSizeY() / 2),
+    playerPos.setObjPos( (mainGameMechsRef->getBoardSizeX() / 2),       //set player to middle of board in x
+                         (mainGameMechsRef->getBoardSizeY() / 2),       //set player to middle of board in y
                          ('*')      //FIXME     get symbol from somewhere else?
                         );
 }
 
+Player::Player()        //this constructor should never be used, it exists just for object defenition purposes in main
+{
+    mainGameMechsRef = nullptr;
+    myDir = STOP;
+    
+    // more actions to be included
+    playerPos.setObjPos( (-99),       //set player to middle of board in x
+                         (-99),       //set player to middle of board in y
+                         ('9')      //FIXME     get symbol from somewhere else?
+                        );
+}
 
 Player::~Player()
 {
