@@ -52,8 +52,8 @@ void objPosArrayList::insertTail(objPos thisPos)
         return;
     }
     
-
-    aList[sizeArray++] = thisPos;
+    aList[sizeList] = thisPos;
+    sizeList++;
 }
 
 void objPosArrayList::removeHead()
@@ -70,11 +70,11 @@ void objPosArrayList::removeHead()
     for (int i = 0; i < (sizeList - 1); i++)
     {
         aList[i] = aList[i+1];
-        sizeList--;
 
         //lazy deletion
         //doesnt acutally delete last slot, just makes it effectivley unaccesible by adjusting sizeList size
     }
+    sizeList--;
 }
 
 void objPosArrayList::removeTail()
