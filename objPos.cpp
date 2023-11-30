@@ -7,12 +7,12 @@ objPos::objPos()
     symbol = 0; //NULL
 }
 
-objPos::objPos(objPos &o)
-{
+objPos::objPos(const objPos &o) {
     x = o.x;
     y = o.y;
     symbol = o.symbol;
 }
+
 
 
 objPos::objPos(int xPos, int yPos, char sym)

@@ -40,6 +40,8 @@ void Initialize(GameMechs &gameMechanics, Player &player)
     //gameMechanics.initalizeBorder();      FIXME
 
     player = Player(&gameMechanics);
+
+
 }
 
 void RunGameLoop(GameMechs &gameMechanics, Player &player)
@@ -49,8 +51,13 @@ void RunGameLoop(GameMechs &gameMechanics, Player &player)
         // Run game logic
         gameMechanics.runLogic();
 
+        // Handle debug key
+        gameMechanics.handleDebugKey();
+  
+
         // Draw screen
         drawScreen(gameMechanics, player);
+
 
         // Update player move direction
         player.updatePlayerDir();
@@ -73,6 +80,8 @@ void drawScreen(GameMechs &gameMechanics, Player &player)
     int borderArraySize = (2* boardSizeX) + ( 2* (boardSizeY - 2));
 
     objPos playerPos;
+    objPos foodPos = gameMechanics.getFoodPosition();  // Retrieve food position
+
 
     MacUILib_clearScreen();  
 
@@ -86,6 +95,12 @@ void drawScreen(GameMechs &gameMechanics, Player &player)
             {
                 MacUILib_printf("%c", playerPos.symbol);
             }
+
+            // Print food
+            else if (i == foodPos.y && j == foodPos.x) {
+                MacUILib_printf("%c", foodPos.symbol);
+            }
+
             //FIXME implement print collectables
             else if ( ( (i == 0) || (i == (boardSizeY - 1) ) ) || ( (0 == j) || ( (boardSizeX - 1) == j) ) )
             {
