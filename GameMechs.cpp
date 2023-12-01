@@ -1,8 +1,6 @@
 #include <iostream>  
 #include "GameMechs.h"
 #include "MacUILib.h"
-#include <cstdlib>  // Include this for rand()
-
 
 
 // a bunch of emty getter and setter
@@ -26,19 +24,6 @@ GameMechs::GameMechs() {
     int boardSizeX;
     int boardSizeY;*/
 }
-
-void GameMechs::generateRandomFood() {
-    int randomX = rand() % (boardSizeX - 2) + 1;
-    int randomY = rand() % (boardSizeY - 2) + 1;
-    foodPos.setObjPos(randomX, randomY, 'O');  // Assuming 'F' is the symbol for food
-}
-
-objPos GameMechs::getFoodPosition() {
-    return foodPos;
-}
-
-
-
 
 GameMechs::GameMechs(int boardX, int boardY) {
     // Additional actions during parameterized construction
@@ -147,14 +132,4 @@ void GameMechs::DebugIncrementScore() {
 void GameMechs::DebugSetLoseFlag() {
     setLoseFlag();
     cout << "Debug: Lose Flag Set." << endl;
-}
-
-void GameMechs::setDebugKey(char key) {
-    debugKey = key;
-}
-
-void GameMechs::handleDebugKey() {
-    if (getInput() == 'g') {  //g is debug
-        generateRandomFood();
-    }
 }

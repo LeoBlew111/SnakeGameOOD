@@ -22,12 +22,6 @@ public:
     //lose flag and debug       FIXME
     void DebugIncrementScore();
     void DebugSetLoseFlag(); 
-        
-    void generateRandomFood();
-    objPos getFoodPosition();  // Getter for food objPos
-    
-
-
 
     // Constructors and Destructor
     GameMechs();
@@ -65,13 +59,6 @@ public:
     // Initalize border
     void initalizeBorder();
 
-    // Setter method for the debug key
-    void setDebugKey(char key);
-
-    // Declaration for the handleDebugKey method
-    void handleDebugKey();
-
-
 
 private:
     int speed;
@@ -82,11 +69,6 @@ private:
     int score;
     int boardSizeX;
     int boardSizeY;
-
-    objPos foodPos;
-
-    char debugKey;
-
 
 };
 
