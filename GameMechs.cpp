@@ -1,6 +1,8 @@
 #include <iostream>  
 #include "GameMechs.h"
 #include "MacUILib.h"
+#include <cstdlib>  // Include this for rand()
+#include <time.h>
 
 
 // a bunch of emty getter and setter
@@ -14,6 +16,8 @@ GameMechs::GameMechs() {
     speed = 1;
     boardSizeX = DEFAULT_BOARD_X_SIZE;
     boardSizeY = DEFAULT_BOARD_Y_SIZE;
+    srand(time(NULL));
+    foodPos = objPos();
 
     /*int speed;
 
@@ -34,11 +38,39 @@ GameMechs::GameMechs(int boardX, int boardY) {
     speed = 1;
     boardSizeX = boardX;
     boardSizeY = boardY;
+    srand(time(NULL));
+    foodPos = objPos();
     
 }
 
 GameMechs::~GameMechs() {
     // Deallocate any heap data members if needed nothing yet 
+}
+
+void GameMechs::generateRandomFood(objPos blockOf) {
+    
+    bool foundPos = 0;
+    int xPosCandidate;
+    int yPosCandidate;
+
+    while(!foundPos)
+    {
+        xPosCandidate = ( (rand() %(boardSizeX - 2) ) + 1 );      //new random coords to try
+        yPosCandidate = ( (rand() %(boardSizeY - 2) ) + 1 );
+
+        if ( (xPosCandidate != blockOf.x) && (yPosCandidate != blockOf.y) )
+        {
+            foodPos.setObjPos(xPosCandidate, yPosCandidate, FOOD_CHAR);
+
+            foundPos = 1;
+        }
+    }
+
+    return;
+}
+
+void GameMechs::getFoodPosition(objPos &returnPos) {
+    returnPos.setObjPos(foodPos);
 }
 
 // Getter and setter for exit flag

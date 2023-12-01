@@ -12,6 +12,7 @@
 using namespace std;
 
 enum Direction { STOP, UP, DOWN, LEFT, RIGHT };
+const char FOOD_CHAR = 'O';
 
 class GameMechs {
 public:
@@ -27,6 +28,9 @@ public:
     GameMechs();
     GameMechs(int boardX, int boardY);
     ~GameMechs();
+
+    void generateRandomFood(objPos blockOf);
+    void getFoodPosition(objPos &returnPos);  // Getter for food objPos
 
     // Getter and setter for exit flag
     bool getExitFlagStatus();
@@ -69,6 +73,8 @@ private:
     int score;
     int boardSizeX;
     int boardSizeY;
+
+    objPos foodPos;
 
 };
 

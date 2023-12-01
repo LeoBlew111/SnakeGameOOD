@@ -12,6 +12,8 @@ Player::Player(GameMechs* thisGMRef)
                          (mainGameMechsRef->getBoardSizeY() / 2),       //set player to middle of board in y
                          ('*')      //FIXME     get symbol from somewhere else?
                         );
+
+    thisGMRef->generateRandomFood(playerPos);       //generate inital food placement
 }
 
 Player::Player()        //this constructor should never be used, it exists just for object defenition purposes in main
