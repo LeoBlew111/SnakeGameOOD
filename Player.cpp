@@ -7,13 +7,16 @@ Player::Player(GameMechs* thisGMRef)
     mainGameMechsRef = thisGMRef;
     myDir = STOP;
 
-    // more actions to be included
-    playerPos.setObjPos( (mainGameMechsRef->getBoardSizeX() / 2),       //set player to middle of board in x
-                         (mainGameMechsRef->getBoardSizeY() / 2),       //set player to middle of board in y
-                         ('*')      //FIXME     get symbol from somewhere else?
-                        );
+    objPos tempPos;
+    tempPos.setObjPos
+    (
+        (mainGameMechsRef->getBoardSizeX() / 2),       //set player to middle of board in x
+        (mainGameMechsRef->getBoardSizeY() / 2),       //set player to middle of board in y
+        ('*')                                          //FIXME     get symbol from somewhere else?
+    );
 
-    thisGMRef->generateRandomFood(playerPos);       //generate inital food placement
+    playerPosList = new objPosArrayList();
+    playerPosList->insertHead(tempPos);
 }
 
 Player::Player()        //this constructor should never be used, it exists just for object defenition purposes in main
@@ -21,22 +24,28 @@ Player::Player()        //this constructor should never be used, it exists just 
     mainGameMechsRef = nullptr;
     myDir = STOP;
     
-    // more actions to be included
-    playerPos.setObjPos( (-99),       //set player to middle of board in x
-                         (-99),       //set player to middle of board in y
-                         ('9')      //FIXME     get symbol from somewhere else?
-                        );
+    objPos tempPos;
+    tempPos.setObjPos
+    (
+        (-99),       //set player to middle of board in x
+        (-99),       //set player to middle of board in y
+        ('9')      //FIXME     get symbol from somewhere else?                                       //FIXME     get symbol from somewhere else?
+    );
+
+    playerPosList = new objPosArrayList();
+    playerPosList->insertHead(tempPos);
 }
 
 Player::~Player()
 {
     // delete any heap members here     FIXME: need any deletion?
+    delete playerPosList;
 }
 
-void Player::getPlayerPos(objPos &returnPos)
+objPosArrayList* Player::getPlayerPos()
 {
     // return the reference to the playerPos arrray list
-    returnPos.setObjPos(playerPos);
+    return playerPosList;
 }
 
 void Player::updatePlayerDir()
@@ -97,6 +106,10 @@ void Player::updatePlayerDir()
 
 void Player::movePlayer()
 {
+    objPos currentHead;     //holding the current pos info of current head
+    playerPosList->getHeadElement(currentHead);
+
+
     // PPA3 Finite State Machine logic
     int borderXSize = mainGameMechsRef->getBoardSizeX();
     int borderYSize = mainGameMechsRef->getBoardSizeY();
@@ -104,39 +117,45 @@ void Player::movePlayer()
     switch(myDir)
     {
         case UP:
-            playerPos.y--;
-            if (playerPos.y == (0) )
+            currentHead.y--;
+            if (currentHead.y == (0) )
             {
-                playerPos.y += (borderYSize - 2);      //wrap player around board
+                currentHead.y += (borderYSize - 2);      //wrap player around board
             }
             //moveCount++;          FIXME need moveCount??
             break;
         case LEFT:
-            playerPos.x--;
-            if (playerPos.x == (0) )
+            currentHead.x--;
+            if (currentHead.x == (0) )
             {
-                playerPos.x += (borderXSize - 2);      //wrap player around board
+                currentHead.x += (borderXSize - 2);      //wrap player around board
             }
             //moveCount++;          FIXME need moveCount??
             break;
         case DOWN:
-            playerPos.y++;
-            if (playerPos.y == (borderYSize - 1) )
+            currentHead.y++;
+            if (currentHead.y == (borderYSize - 1) )
             {
-                playerPos.y -= (borderYSize - 2);      //wrap player around board
+                currentHead.y -= (borderYSize - 2);      //wrap player around board
             }
             //moveCount++;          FIXME need moveCount??
             break;
         case RIGHT:
-            playerPos.x++;
-            if (playerPos.x == (borderXSize - 1) )
+            currentHead.x++;
+            if (currentHead.x == (borderXSize - 1) )
             {
-                playerPos.x -= (borderXSize - 2);      //wrap player around board
+                currentHead.x -= (borderXSize - 2);      //wrap player around board
             }
             //moveCount++;          FIXME need moveCount??
             break;
         default:
             break;
     }
+
+    //new current head should be inserted to head of posList, then remove tail
+    playerPosList->insertHead(currentHead);
+    playerPosList->removeTail();
+
+
 }
 

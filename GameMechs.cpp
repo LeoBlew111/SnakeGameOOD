@@ -47,22 +47,31 @@ GameMechs::~GameMechs() {
     // Deallocate any heap data members if needed nothing yet 
 }
 
-void GameMechs::generateRandomFood(objPos blockOf) {
+void GameMechs::generateRandomFood(objPosArrayList* blockOf) {
     
     bool foundPos = 0;
     int xPosCandidate;
     int yPosCandidate;
+    objPos tempBodySegment;
+    tempBodySegment = objPos();
+
 
     while(!foundPos)
     {
         xPosCandidate = ( (rand() %(boardSizeX - 2) ) + 1 );      //new random coords to try
         yPosCandidate = ( (rand() %(boardSizeY - 2) ) + 1 );
-
-        if ( (xPosCandidate != blockOf.x) && (yPosCandidate != blockOf.y) )
+        for (int i = 0; i < blockOf->getSize(); i++)
         {
+            blockOf->getElement(tempBodySegment, i);
+            
+            if ( (xPosCandidate == tempBodySegment.x) && (yPosCandidate == tempBodySegment.y) )
+            {
+                break;
+            }
+            
             foodPos.setObjPos(xPosCandidate, yPosCandidate, FOOD_CHAR);
-
             foundPos = 1;
+            break;
         }
     }
 

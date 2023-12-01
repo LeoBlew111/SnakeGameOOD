@@ -29,14 +29,15 @@ public:
     GameMechs(int boardX, int boardY);
     ~GameMechs();
 
-    void generateRandomFood(objPos blockOf);
+    //random food generator and position getter
+    void generateRandomFood(objPosArrayList* blockOf);
     void getFoodPosition(objPos &returnPos);  // Getter for food objPos
 
     // Getter and setter for exit flag
     bool getExitFlagStatus();
     void setExitTrue();
 
-    // Getter and setter for L flag
+    // Getter and setter for lose flag
     bool getLoseFlagStatus();
     void setLoseFlag();
 

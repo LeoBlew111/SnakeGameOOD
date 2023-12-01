@@ -2,6 +2,7 @@
 #include "MacUILib.h"
 #include "objPos.h"
 #include "GameMechs.h"
+#include "objPosArrayList.h"
 #include "Player.h"
 
 using namespace std;
@@ -9,55 +10,56 @@ using namespace std;
 // Global consts
 #define DELAY_CONST 100000
 
+GameMechs* gameMechanics;
+Player* player;
+
 // set gameMechanics as instance of GameMechs
-void Initialize(GameMechs &gameMechanics, Player &player);
-void RunGameLoop(GameMechs &gameMechanics, Player &player);
-void CleanUp(GameMechs &gameMechanics);
-void drawScreen(GameMechs &gameMechanics, Player &player);
+void Initialize();
+void RunGameLoop();
+void CleanUp();
+void drawScreen();
 
 
 int main(void)
 {
-    GameMechs gameMechanics;
-    Player player;
+    Initialize();
 
-    Initialize(gameMechanics, player);
+    RunGameLoop();
 
-    RunGameLoop(gameMechanics, player);
-
-    CleanUp(gameMechanics);
+    CleanUp();
 
     return 0;
 }
 
-void Initialize(GameMechs &gameMechanics, Player &player)
+void Initialize()
 {
     MacUILib_init();
     MacUILib_clearScreen();
 
     // Initialize the game mechanics
-    gameMechanics = GameMechs();
+    gameMechanics = new GameMechs();
     //gameMechanics.initalizeBorder();      FIXME
 
-    player = Player(&gameMechanics);
+    player = new Player(gameMechanics);
 
+    gameMechanics->generateRandomFood(player->getPlayerPos());
 }
 
-void RunGameLoop(GameMechs &gameMechanics, Player &player)
+void RunGameLoop()
 {
-    while (!gameMechanics.getExitFlagStatus())
+    while (!gameMechanics->getExitFlagStatus())
     {
         // Run game logic
-        gameMechanics.runLogic();
+        gameMechanics->runLogic();
 
         // Draw screen
-        drawScreen(gameMechanics, player);
+        drawScreen();
 
         // Update player move direction
-        player.updatePlayerDir();
+        player->updatePlayerDir();
 
         // Update player position
-        player.movePlayer();
+        player->movePlayer();
 
         // Loop delay
         MacUILib_Delay(DELAY_CONST);
@@ -67,33 +69,47 @@ void RunGameLoop(GameMechs &gameMechanics, Player &player)
 }
 
 //main draw
-void drawScreen(GameMechs &gameMechanics, Player &player)
+void drawScreen()       //FIXME change gamMech to pass in by ref to reduce copying
 {
-    int boardSizeX = gameMechanics.getBoardSizeX();
-    int boardSizeY = gameMechanics.getBoardSizeY();
+    int boardSizeX = gameMechanics->getBoardSizeX();
+    int boardSizeY = gameMechanics->getBoardSizeY();
     int borderArraySize = (2* boardSizeX) + ( 2* (boardSizeY - 2));
 
-    objPos playerPos;
-    playerPos = objPos();
-    player.getPlayerPos(playerPos);
+    bool drawn;
+
+    objPosArrayList* playerBody = player->getPlayerPos();
+    objPos tempBody;
 
     objPos foodPos;
     foodPos = objPos();
-    gameMechanics.getFoodPosition(foodPos);  // Retrieve food position
+    gameMechanics->getFoodPosition(foodPos);  // Retrieve food position
 
     MacUILib_clearScreen();  
-
     for (int i = 0; i < boardSizeY; i++)      //rows or y values
     {
         for(int j = 0; j < boardSizeX; j++)       //columns or x values
         {
-            //FIXME implement print player
-            if ( (i == playerPos.y) && (j == playerPos.x) )
+            drawn = false;
+
+            //iterate through player body list
+            for(int k = 0; k < playerBody->getSize(); k++)
             {
-                MacUILib_printf("%c", playerPos.symbol);
+                playerBody->getElement(tempBody, k);
+                if( (tempBody.x == j) && (tempBody.y == i) )
+                {
+                    MacUILib_printf("%c", tempBody.symbol);
+                    drawn = true;
+                    break;
+                }
             }
+
+            if(drawn)
+            {
+                continue;       //if player drawn, dont draw anything else
+            }
+
             
-            else if (i == foodPos.y && j == foodPos.x) {
+            if (i == foodPos.y && j == foodPos.x) {
                 MacUILib_printf("%c", foodPos.symbol);
             }
             
@@ -101,17 +117,6 @@ void drawScreen(GameMechs &gameMechanics, Player &player)
             else if ( ( (i == 0) || (i == (boardSizeY - 1) ) ) || ( (0 == j) || ( (boardSizeX - 1) == j) ) )
             {
                 MacUILib_printf("#");
-                
-                
-                /*  FIXME
-                for (int k = 0; k < borderArraySize; k++)
-                {
-                    if ( (gameMechanics.border[k].x == j) && (gameMechanics.border[k].y == i) )
-                    {
-                        MacUILib_printf("%c", gameMechanics.border[k].symbol);
-                    }
-                }
-                */
             }
             else
             {
@@ -122,10 +127,13 @@ void drawScreen(GameMechs &gameMechanics, Player &player)
     }
 }
 
-void CleanUp(GameMechs &gameMechanics)
+void CleanUp()
 {
     MacUILib_clearScreen();
     MacUILib_uninit();
+
+    delete gameMechanics;
+    delete player;
 
     // Perform any additional cleanup using the game mechanics object proly clear memory
 }

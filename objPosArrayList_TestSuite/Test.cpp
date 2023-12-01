@@ -83,6 +83,49 @@ void testInsertHead_1Element()
 	// The destructor will be called automatically for stack-allocated objects
 }
 
+void testInsertHead_1Element1()
+{
+	objPos currentPos;
+	objPos samplePos{2, 5, 'a'};  
+
+	// Insert 1 sample element
+	objPosArrayList* thisList;			//then try ref
+	thisList = new objPosArrayList();
+	thisList->insertHead(samplePos);
+
+	int expectedSize = 1;
+	int actualSize = thisList->getSize();
+		
+	// First check the list size is 1
+	ASSERT_EQUAL(expectedSize, actualSize);
+
+	bool expectedCheck = true;
+	bool actualCheck;
+
+	// Then check whether the head element is what we have inserted.
+	thisList->getHeadElement(currentPos);
+	actualCheck = samplePos.isPosEqual(&currentPos);
+
+	ASSERT_EQUAL(expectedCheck, actualCheck);
+
+
+	// Next, check whether the tail element is also the head element in a list of 1 element.
+	thisList->getTailElement(currentPos);
+	actualCheck = samplePos.isPosEqual(&currentPos);
+
+	ASSERT_EQUAL(expectedCheck, actualCheck);
+
+
+	// Finally, chech whether the element at index = 0 is also the head element in a list of 1 element
+	// Then check whether the head element is what we have inserted.
+	thisList->getElement(currentPos, 0);
+	actualCheck = samplePos.isPosEqual(&currentPos);
+
+	ASSERT_EQUAL(expectedCheck, actualCheck);
+
+	// The destructor will be called automatically for stack-allocated objects
+}
+
 // Test Case 2b - insertHead 5 Element 
 // - Will require you to implement getHeadElement() and getTailElement() method.
 void testInsertHead_5Element()
@@ -417,6 +460,7 @@ bool runAllTests(int argc, char const *argv[]) {
 	s.push_back(CUTE(testRemoveTail_1Element));
 	s.push_back(CUTE(testRemoveTail_5Element));
 	s.push_back(CUTE(testInsertTail_1Element1));
+	s.push_back(CUTE(testInsertHead_1Element1));
 
 
 
