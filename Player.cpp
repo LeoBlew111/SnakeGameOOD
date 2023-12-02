@@ -161,10 +161,14 @@ void Player::movePlayer()
     headPos = objPos();
     playerPosList->getHeadElement(headPos);
 
+    objPos bodySegmentPos;
+    bodySegmentPos = objPos();
+
     objPos foodPos;
     foodPos = objPos();
     mainGameMechsRef->getFoodPosition(foodPos);
 
+    
     if ( (headPos.x == foodPos.x) && (headPos.y == foodPos.y) )
     {
         mainGameMechsRef->incrementScore();
@@ -174,8 +178,16 @@ void Player::movePlayer()
     {
         playerPosList->removeTail();
     }
-
-
-
+    for (int i = 1; i < playerPosList->getSize(); i++)      //getSize() return human redable index, subtract 1 for array indexing. 
+                                                            //start at index 1 so head is not check against itself 
+    {
+        playerPosList->getElement(bodySegmentPos, i);
+        if ( (headPos.x == bodySegmentPos.x) && (headPos.y == bodySegmentPos.y) && (myDir != STOP) )
+        {
+            mainGameMechsRef->setLoseFlag();
+            mainGameMechsRef->setExitTrue();
+            return;
+        }
+    }
 }
 

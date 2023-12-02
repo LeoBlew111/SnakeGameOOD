@@ -1,5 +1,5 @@
-#define DEFAULT_BOARD_X_SIZE 20
-#define DEFAULT_BOARD_Y_SIZE 10
+#define DEFAULT_BOARD_X_SIZE 30
+#define DEFAULT_BOARD_Y_SIZE 15
 #ifndef GAMEMECHS_H
 #define GAMEMECHS_H
 
@@ -12,7 +12,7 @@
 using namespace std;
 
 enum Direction { STOP, UP, DOWN, LEFT, RIGHT };
-const char FOOD_CHAR = 'O';
+const char FOOD_CHAR = 'o';
 
 class GameMechs {
 public:
