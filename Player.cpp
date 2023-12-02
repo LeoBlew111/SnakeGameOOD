@@ -17,6 +17,7 @@ Player::Player(GameMechs* thisGMRef)
 
     playerPosList = new objPosArrayList();
     playerPosList->insertHead(tempPos);
+    
 }
 
 Player::Player()        //this constructor should never be used, it exists just for object defenition purposes in main
@@ -154,7 +155,25 @@ void Player::movePlayer()
 
     //new current head should be inserted to head of posList, then remove tail
     playerPosList->insertHead(currentHead);
-    playerPosList->removeTail();
+
+    //check if food collision
+    objPos headPos;
+    headPos = objPos();
+    playerPosList->getHeadElement(headPos);
+
+    objPos foodPos;
+    foodPos = objPos();
+    mainGameMechsRef->getFoodPosition(foodPos);
+
+    if ( (headPos.x == foodPos.x) && (headPos.y == foodPos.y) )
+    {
+        mainGameMechsRef->incrementScore();
+    }
+    else
+    {
+        playerPosList->removeTail();
+    }
+
 
 
 }

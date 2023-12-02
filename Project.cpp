@@ -125,6 +125,8 @@ void drawScreen()       //FIXME change gamMech to pass in by ref to reduce copyi
         }
         MacUILib_printf("\n");
     }
+
+    MacUILib_printf("Score: %d", gameMechanics->getScore());
 }
 
 void CleanUp()

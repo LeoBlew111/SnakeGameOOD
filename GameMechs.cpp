@@ -165,12 +165,12 @@ void GameMechs::initalizeBorder()       //FIXME     dont need anymore
     }
 }
 
-void GameMechs::DebugIncrementScore() {
+void GameMechs::DebugIncrementScore() {     //FIXME
     incrementScore();
     cout << "Debug: Score Incremented. New Score: " << getScore() << endl;
 }
 
-void GameMechs::DebugSetLoseFlag() {
+void GameMechs::DebugSetLoseFlag() {        //FIXME
     setLoseFlag();
     cout << "Debug: Lose Flag Set." << endl;
 }
