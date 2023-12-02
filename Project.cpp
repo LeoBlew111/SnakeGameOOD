@@ -84,6 +84,27 @@ void drawScreen()       //FIXME change gamMech to pass in by ref to reduce copyi
     foodPos = objPos();
     gameMechanics->getFoodPosition(foodPos);  // Retrieve food position
 
+    if (gameMechanics->getLoseFlagStatus() == true)
+    {
+        // Clear the screen
+        MacUILib_clearScreen();
+
+        // Display game over message
+        MacUILib_printf("Game Over! You lost!\n");
+        MacUILib_printf("Your final score: %d\n", gameMechanics->getScore());
+
+        // Additional messages or actions can be added here
+
+        // Delay for a moment before exiting
+        MacUILib_Delay(DELAY_CONST * 50);
+        MacUILib_Delay(DELAY_CONST * 50);
+        MacUILib_Delay(DELAY_CONST * 50);
+        MacUILib_Delay(DELAY_CONST * 50);
+
+        // Set exit flag to terminate the game loop
+        gameMechanics->setExitTrue();
+    }
+
     MacUILib_clearScreen();  
     for (int i = 0; i < boardSizeY; i++)      //rows or y values
     {

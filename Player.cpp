@@ -185,7 +185,6 @@ void Player::movePlayer()
         if ( (headPos.x == bodySegmentPos.x) && (headPos.y == bodySegmentPos.y) && (myDir != STOP) )
         {
             mainGameMechsRef->setLoseFlag();
-            mainGameMechsRef->setExitTrue();
             return;
         }
     }
