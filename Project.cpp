@@ -93,13 +93,15 @@ void drawScreen()       //FIXME change gamMech to pass in by ref to reduce copyi
         MacUILib_printf("Game Over! You lost!\n");
         MacUILib_printf("Your final score: %d\n", gameMechanics->getScore());
 
-        // Additional messages or actions can be added here
-
-        // Delay for a moment before exiting
+        // delay const, cant go over*50
         MacUILib_Delay(DELAY_CONST * 50);
+        
         MacUILib_Delay(DELAY_CONST * 50);
+        
         MacUILib_Delay(DELAY_CONST * 50);
+        
         MacUILib_Delay(DELAY_CONST * 50);
+        
 
         // Set exit flag to terminate the game loop
         gameMechanics->setExitTrue();
