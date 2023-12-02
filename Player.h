@@ -22,11 +22,6 @@ class Player
 
         objPosArrayList* getPlayerPos(); // Upgrade this in iteration 3.
         void updatePlayerDir();
-        //FIXME need more actions
-        //after inserting head but before remove tail
-        //check if player new head pos collides with food
-        //if yes, increment score, do not remove tail, generate new tail
-        //else remove tail (carry on as usual)
         void movePlayer();
 
 

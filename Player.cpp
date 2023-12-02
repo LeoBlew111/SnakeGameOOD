@@ -168,6 +168,7 @@ void Player::movePlayer()
     if ( (headPos.x == foodPos.x) && (headPos.y == foodPos.y) )
     {
         mainGameMechsRef->incrementScore();
+        mainGameMechsRef->generateRandomFood(playerPosList);
     }
     else
     {
