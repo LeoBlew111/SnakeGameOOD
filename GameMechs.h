@@ -5,78 +5,64 @@
 
 #include <cstdlib>
 #include <time.h>
+#include <iostream>
 
 #include "objPos.h"
+#include "MacUILib.h"
 #include "objPosArrayList.h"
 
 using namespace std;
 
-enum Direction { STOP, UP, DOWN, LEFT, RIGHT };
-const char FOOD_CHAR = 'o';
 
 class GameMechs {
-public:
-    //define the array of border objects using board x and y size
-    objPos border[(2*DEFAULT_BOARD_X_SIZE) + (2*(DEFAULT_BOARD_Y_SIZE))];       //FIXME need to be able to change board size?
+    public:
+        // Constructors and Destructor
+        GameMechs();
+        GameMechs(int boardX, int boardY);      //parameters: wanted board size
+        ~GameMechs();
 
+        // Random food generator and position getter
+        void generateRandomFood(objPosArrayList* blockOf);      //Parameter: input player objPosArrayList
+        void getFoodPosition(objPos &returnPos);
 
-    //lose flag and debug       FIXME
-    void DebugIncrementScore();
-    void DebugSetLoseFlag(); 
+        // Getter and setter for exit flag
+        bool getExitFlagStatus();
+        void setExitTrue();
 
-    // Constructors and Destructor
-    GameMechs();
-    GameMechs(int boardX, int boardY);
-    ~GameMechs();
+        // Getter and setter for lose flag
+        bool getLoseFlagStatus();
+        void setLoseFlag();
 
-    //random food generator and position getter
-    void generateRandomFood(objPosArrayList* blockOf);
-    void getFoodPosition(objPos &returnPos);  // Getter for food objPos
+        // Getter and setter and clear for input
+        char getInput();
+        void setInput(char thisInput);
+        void clearInput();
 
-    // Getter and setter for exit flag
-    bool getExitFlagStatus();
-    void setExitTrue();
+        // Getters for board dimensions
+        int getBoardSizeX();
+        int getBoardSizeY();
 
-    // Getter and setter for lose flag
-    bool getLoseFlagStatus();
-    void setLoseFlag();
+        // Getter and incrementor for the game score
+        int getScore();
+        void incrementScore();
 
-    // Getter and setter for input
-    char getInput();
-    void setInput(char thisInput);
+        // Method for ending game
+        void endGame();
 
-    // Clear input method
-    void clearInput();
+    private:
+        //consts
+        const char FOOD_CHAR = 'o';     // Char used to represent food
 
-    // Getter methods for board dimensions
-    int getBoardSizeX();
-    int getBoardSizeY();
+        //vars
+        char input;
+        bool exitFlag;
+        bool loseFlag;
+        int score;
+        int boardSizeX;
+        int boardSizeY;
 
-    // Getter method for the game score
-    int getScore();
-
-    // Specialized setter to increment the score
-    void incrementScore();
-
-    // Main logic
-    void runLogic();
-
-    // Initalize border
-    void initalizeBorder();
-
-
-private:
-    int speed;
-
-    char input;
-    bool exitFlag;
-    bool loseFlag;
-    int score;
-    int boardSizeX;
-    int boardSizeY;
-
-    objPos foodPos;
-
+        //objs
+        objPos foodPos;
 };
 
 #endif

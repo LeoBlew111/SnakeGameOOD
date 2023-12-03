@@ -1,26 +1,26 @@
 #include "Player.h"
 
 
-
 Player::Player(GameMechs* thisGMRef)
 {
     mainGameMechsRef = thisGMRef;
-    myDir = STOP;
+    myDir = STOP;       // Default dir is STOP
 
-    objPos tempPos;
-    tempPos.setObjPos
+    // Inital head position of player
+    objPos initalPos;
+    initalPos.setObjPos
     (
-        (mainGameMechsRef->getBoardSizeX() / 2),       //set player to middle of board in x
-        (mainGameMechsRef->getBoardSizeY() / 2),       //set player to middle of board in y
-        ('*')                                          //FIXME     get symbol from somewhere else?
+        (mainGameMechsRef->getBoardSizeX() / 2),       // Set player to middle of board in x
+        (mainGameMechsRef->getBoardSizeY() / 2),       // Set player to middle of board in y
+        ('*')                                          // Char to represent player
     );
 
     playerPosList = new objPosArrayList();
-    playerPosList->insertHead(tempPos);
+    playerPosList->insertHead(initalPos);
     
 }
-
-Player::Player()        //this constructor should never be used, it exists just for object defenition purposes in main
+ // THIS DEAFULT CONSTRUCTOR SHOULD NEVER BE USED AS A GAMEMECHS REF IS NECESSARY FOR CORRECT OPERATION
+Player::Player()
 {
     mainGameMechsRef = nullptr;
     myDir = STOP;
@@ -28,50 +28,36 @@ Player::Player()        //this constructor should never be used, it exists just 
     objPos tempPos;
     tempPos.setObjPos
     (
-        (-99),       //set player to middle of board in x
-        (-99),       //set player to middle of board in y
-        ('9')      //FIXME     get symbol from somewhere else?                                       //FIXME     get symbol from somewhere else?
+        (-99),       // Set player to middle of board in x
+        (-99),       // Set player to middle of board in y
+        ('9')        // Char to represent player
     );
 
     playerPosList = new objPosArrayList();
     playerPosList->insertHead(tempPos);
 }
-
 Player::~Player()
 {
-    // delete any heap members here     FIXME: need any deletion?
-    delete playerPosList;
+    delete playerPosList;       // Delete list on heap
 }
 
 objPosArrayList* Player::getPlayerPos()
 {
-    // return the reference to the playerPos arrray list
-    return playerPosList;
+    return playerPosList;       // Return the reference to the playerPosList
 }
-
 void Player::updatePlayerDir()
 {
-    // PPA3 input processing logic
-    char input = mainGameMechsRef->getInput();
-    if(input != 0)  // if not null character
+    char input = mainGameMechsRef->getInput();      // Get keyboard input
+    if(input != (char)0)  // If not null character
     {
         switch(input)
         {                      
-            case (char)27:  //escape key pressed
-                mainGameMechsRef->setExitTrue();
+            case (char)27:  // Escape key pressed
+                mainGameMechsRef->setExitTrue();        // Exit game
                 break;
-            /*                                          FIXME: speed change?
-            case (char)9:       //TAB key pressed
-                gameSpeedMultiplier++;
-                if (gameSpeedMultiplier > 5)
-                {
-                    gameSpeedMultiplier = 1;
-                }
-                break;
-            */
-            case 'w':     //w or W key
+            case 'w':     // w or W key
             case 'W':
-                if ( (myDir == LEFT) || (myDir == RIGHT) || (myDir == STOP) )
+                if ( (myDir == LEFT) || (myDir == RIGHT) || (myDir == STOP) )       // Only allow player to switch directions by 90 degrees at a time
                 {
                     myDir = UP;
                 }
@@ -100,18 +86,16 @@ void Player::updatePlayerDir()
             default:
                 break;
         }
-        input = 0;
+
         mainGameMechsRef->clearInput();
     }
 }
-
 void Player::movePlayer()
 {
-    objPos currentHead;     //holding the current pos info of current head
-    playerPosList->getHeadElement(currentHead);
+    objPos currentHead;
+    playerPosList->getHeadElement(currentHead);     // Holding the pos info of current head of player
 
 
-    // PPA3 Finite State Machine logic
     int borderXSize = mainGameMechsRef->getBoardSizeX();
     int borderYSize = mainGameMechsRef->getBoardSizeY();
 
@@ -119,11 +103,10 @@ void Player::movePlayer()
     {
         case UP:
             currentHead.y--;
-            if (currentHead.y == (0) )
+            if (currentHead.y == (0) )      // If collide with border
             {
-                currentHead.y += (borderYSize - 2);      //wrap player around board
+                currentHead.y += (borderYSize - 2);      // Wrap player around board from one side to thre other
             }
-            //moveCount++;          FIXME need moveCount??
             break;
         case LEFT:
             currentHead.x--;
@@ -131,7 +114,6 @@ void Player::movePlayer()
             {
                 currentHead.x += (borderXSize - 2);      //wrap player around board
             }
-            //moveCount++;          FIXME need moveCount??
             break;
         case DOWN:
             currentHead.y++;
@@ -139,7 +121,6 @@ void Player::movePlayer()
             {
                 currentHead.y -= (borderYSize - 2);      //wrap player around board
             }
-            //moveCount++;          FIXME need moveCount??
             break;
         case RIGHT:
             currentHead.x++;
@@ -147,44 +128,46 @@ void Player::movePlayer()
             {
                 currentHead.x -= (borderXSize - 2);      //wrap player around board
             }
-            //moveCount++;          FIXME need moveCount??
             break;
         default:
             break;
     }
 
-    //new current head should be inserted to head of posList, then remove tail
-    playerPosList->insertHead(currentHead);
+    // To move snake, add head then, and remove tail
+    playerPosList->insertHead(currentHead);     // Add head
 
-    //check if food collision
-    objPos headPos;
+    // Check food and body collision
+    objPos headPos;     // Head pos to see if collided with food
     headPos = objPos();
     playerPosList->getHeadElement(headPos);
 
-    objPos bodySegmentPos;
+    objPos bodySegmentPos;      // Current body segment pos to see if head collided with body (suicide check)
     bodySegmentPos = objPos();
 
-    objPos foodPos;
+    objPos foodPos;     // Food pos to see if collided with food
     foodPos = objPos();
     mainGameMechsRef->getFoodPosition(foodPos);
 
     
-    if ( (headPos.x == foodPos.x) && (headPos.y == foodPos.y) )
+    if ( (headPos.x == foodPos.x) && (headPos.y == foodPos.y) )     // If collided with food
     {
         mainGameMechsRef->incrementScore();
-        mainGameMechsRef->generateRandomFood(playerPosList);
+        mainGameMechsRef->generateRandomFood(playerPosList);        // Generate new food position
     }
-    else
+    else        // Only execute this if no food collision
     {
-        playerPosList->removeTail();
+        playerPosList->removeTail();        // Remove tail
     }
-    for (int i = 1; i < playerPosList->getSize(); i++)      //getSize() return human redable index, subtract 1 for array indexing. 
-                                                            //start at index 1 so head is not check against itself 
+    // Suicide check
+    for (int i = 1; i < playerPosList->getSize(); i++)      // Iterate through player body
+                                                            // GetSize() return human redable index, subtract 1 for array indexing. 
+                                                            // Start at index 1 so head is not check against itself 
     {
         playerPosList->getElement(bodySegmentPos, i);
-        if ( (headPos.x == bodySegmentPos.x) && (headPos.y == bodySegmentPos.y) && (myDir != STOP) )
+        if ( (headPos.x == bodySegmentPos.x) && (headPos.y == bodySegmentPos.y) )       // If head collide with current body segment
         {
-            mainGameMechsRef->setLoseFlag();
+            mainGameMechsRef->setLoseFlag();        // Loose
+            mainGameMechsRef->setExitTrue();
             return;
         }
     }

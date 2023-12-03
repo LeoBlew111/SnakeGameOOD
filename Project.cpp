@@ -1,4 +1,3 @@
-#include <iostream>
 #include "MacUILib.h"
 #include "objPos.h"
 #include "GameMechs.h"
@@ -8,12 +7,11 @@
 using namespace std;
 
 // Global consts
-#define DELAY_CONST 100000
+#define DELAY_CONST 100000      // Default delay time in between loop runs
 
 GameMechs* gameMechanics;
 Player* player;
 
-// set gameMechanics as instance of GameMechs
 void Initialize();
 void RunGameLoop();
 void CleanUp();
@@ -22,6 +20,8 @@ void drawScreen();
 
 int main(void)
 {
+    // Program initalizes, runs main loop until an exit condition is met, cleans up, then ends.
+
     Initialize();
 
     RunGameLoop();
@@ -33,25 +33,26 @@ int main(void)
 
 void Initialize()
 {
+    // Initalize MacUILib
     MacUILib_init();
+
+    //  Clear screen of text
     MacUILib_clearScreen();
 
     // Initialize the game mechanics
     gameMechanics = new GameMechs();
-    //gameMechanics.initalizeBorder();      FIXME
 
+    // Initalize the player
     player = new Player(gameMechanics);
 
+    // Generate inital food
     gameMechanics->generateRandomFood(player->getPlayerPos());
 }
 
 void RunGameLoop()
 {
-    while (!gameMechanics->getExitFlagStatus())
+    while (!gameMechanics->getExitFlagStatus())     // If exit condition is not met
     {
-        // Run game logic
-        gameMechanics->runLogic();
-
         // Draw screen
         drawScreen();
 
@@ -65,101 +66,70 @@ void RunGameLoop()
         MacUILib_Delay(DELAY_CONST);
     }
 
-    // Display end-game messages using gameMechanics methods if needed
+    gameMechanics->endGame();       // End game if condition met
 }
 
-//main draw
-void drawScreen()       //FIXME change gamMech to pass in by ref to reduce copying
+void drawScreen()       // Draw border, player, food, and score
 {
     int boardSizeX = gameMechanics->getBoardSizeX();
     int boardSizeY = gameMechanics->getBoardSizeY();
-    int borderArraySize = (2* boardSizeX) + ( 2* (boardSizeY - 2));
 
-    bool drawn;
+    bool playerSegmentDrawn;        // Represents if current player segment has been drawn
 
-    objPosArrayList* playerBody = player->getPlayerPos();
-    objPos tempBody;
+    objPosArrayList* playerBody = player->getPlayerPos();       // Get position of player
+    objPos tempBodySegment;
 
     objPos foodPos;
     foodPos = objPos();
     gameMechanics->getFoodPosition(foodPos);  // Retrieve food position
-
-    if (gameMechanics->getLoseFlagStatus() == true)
-    {
-        // Clear the screen
-        MacUILib_clearScreen();
-
-        // Display game over message
-        MacUILib_printf("Game Over! You lost!\n");
-        MacUILib_printf("Your final score: %d\n", gameMechanics->getScore());
-
-        // delay const, cant go over*50
-        MacUILib_Delay(DELAY_CONST * 50);
-        
-        MacUILib_Delay(DELAY_CONST * 50);
-        
-        MacUILib_Delay(DELAY_CONST * 50);
-        
-        MacUILib_Delay(DELAY_CONST * 50);
-        
-
-        // Set exit flag to terminate the game loop
-        gameMechanics->setExitTrue();
-    }
+    
 
     MacUILib_clearScreen();  
-    for (int i = 0; i < boardSizeY; i++)      //rows or y values
+    for (int i = 0; i < boardSizeY; i++)      // Rows or y values
     {
-        for(int j = 0; j < boardSizeX; j++)       //columns or x values
+        for(int j = 0; j < boardSizeX; j++)       // Columns or x values
         {
-            drawn = false;
+            playerSegmentDrawn = false;
 
-            //iterate through player body list
+            // Iterate through player body list
             for(int k = 0; k < playerBody->getSize(); k++)
             {
-                playerBody->getElement(tempBody, k);
-                if( (tempBody.x == j) && (tempBody.y == i) )
+                playerBody->getElement(tempBodySegment, k);     // Set tempBodySegment to current player body segment
+                if( (tempBodySegment.x == j) && (tempBodySegment.y == i) )
                 {
-                    MacUILib_printf("%c", tempBody.symbol);
-                    drawn = true;
-                    break;
+                    MacUILib_printf("%c", tempBodySegment.symbol);      // Print segment
+                    playerSegmentDrawn = true;
+                    break;      // There can only be one player segment at any set of coords, so break out of for loop
                 }
             }
-
-            if(drawn)
+            if(playerSegmentDrawn)
             {
-                continue;       //if player drawn, dont draw anything else
-            }
-
-            
-            if (i == foodPos.y && j == foodPos.x) {
-                MacUILib_printf("%c", foodPos.symbol);
+                continue;       // If player segment drawn, dont draw anything else
             }
             
-            //FIXME implement print collectables
-            else if ( ( (i == 0) || (i == (boardSizeY - 1) ) ) || ( (0 == j) || ( (boardSizeX - 1) == j) ) )
+            if (i == foodPos.y && j == foodPos.x) {     // If pos of food     
+                MacUILib_printf("%c", foodPos.symbol);      // Draw
+                continue;       // Nothing else to print here, continue
+            }
+            else if ( ( (i == 0) || (i == (boardSizeY - 1) ) ) || ( (0 == j) || ( (boardSizeX - 1) == j) ) )        // If coords of any border component
             {
                 MacUILib_printf("#");
             }
             else
             {
-                MacUILib_printf(" ");
+                MacUILib_printf(" ");       // Else print space
             }
         }
-        MacUILib_printf("\n");
+        MacUILib_printf("\n");      // Go down a line after each row drawn
     }
 
-    MacUILib_printf("Score: %d", gameMechanics->getScore());
+    MacUILib_printf("Score: %d", gameMechanics->getScore());        // After all rows drawn, drawn score
 }
 
 void CleanUp()
 {
-    MacUILib_clearScreen();
-    MacUILib_uninit();
+    MacUILib_uninit();      // Uninitalize MacUILib
 
     delete gameMechanics;
     delete player;
-
-    //Test
-    
 }

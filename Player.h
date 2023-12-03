@@ -5,36 +5,24 @@
 #include "objPos.h"
 #include "objPosArrayList.h"
 
+
 class Player
 {
-    // Construct the remaining declaration from the project manual.
-
-    // Only some sample members are included here
-
-    // You will include more data members and member functions to complete your design.
-
     public:
-        enum Dir {UP, DOWN, LEFT, RIGHT, STOP};  // This is the direction state
+        enum Dir {UP, DOWN, LEFT, RIGHT, STOP};  // Direction state
 
-        Player();
-        Player(GameMechs* thisGMRef);
+        // Construcors and destructor
+        Player();       // THIS DEAFULT CONSTRUCTOR SHOULD NEVER BE USED AS A GAMEMECHS REF IS NECESSARY FOR CORRECT OPERATION
+        Player(GameMechs* thisGMRef);       // Constructor with parameter: reference to the game mechanics obj
         ~Player();
 
-        objPosArrayList* getPlayerPos(); // Upgrade this in iteration 3.
+        objPosArrayList* getPlayerPos();        // Get position of player
         void updatePlayerDir();
         void movePlayer();
-
-
-        //FIXME add self collision check
-        // if collide set loseflaf and exitflag both to true (through GM)
-        //this will break program loop and end game
-        //if ending, you need to differentiate if lost or won (with their messages)
-
     private:
-        objPosArrayList *playerPosList;   // Upgrade this in iteration 3.       
-        enum Dir myDir;
+        objPosArrayList* playerPosList;     // The list of player segments 
+        enum Dir myDir;     // Direction of player
 
-        // Need a reference to the Main Game Mechanisms
         GameMechs* mainGameMechsRef;
 };
 

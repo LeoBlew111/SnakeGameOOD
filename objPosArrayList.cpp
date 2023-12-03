@@ -1,68 +1,50 @@
 #include "objPosArrayList.h"
 
-// Check lecture contents on general purpose array list construction, 
-// and modify it to support objPos array list construction.
-
 objPosArrayList::objPosArrayList()
 {
-    //initalize vars
     sizeList = 0;
-    sizeArray = ARRAY_MAX_CAP;
-    aList = new objPos[sizeArray];      //initalize to heap
+    sizeArray = ARRAY_MAX_CAP;      // Set max size of the list
+    aList = new objPos[sizeArray];      // Initalize to heap
 }
-
 objPosArrayList::~objPosArrayList()
 {
-    delete[] aList;     //FIXME need deep delete?
-}
-
-int objPosArrayList::getSize()
-{
-    return sizeList;
+    delete[] aList;     // Delete aList and each of its indicies
 }
 
 void objPosArrayList::insertHead(objPos thisPos)
 {
-    // check if full
-    if(sizeList == sizeArray)
+    if(sizeList == sizeArray)       // Check if list is full
     {
-        //cout << "array full.."<< endl;            FIXME need somthing to show full?
-        return;
+        return;     // Nothing happens if list is full
     }
 
-    //pushing all elements back by one
-    // overwrite the value in i+1 pos with that of value in i pos
+    // Push all elements back by one
+    // Overwrite the value in i+1 pos with that of value in i pos
     for (int i = sizeList; i > 0 ; i--)
     {
         aList[i].setObjPos(aList[i-1]);
-        //aList[i] = aList[i-1];
     }
 
-    //aList[0] is ready to be overwritten by imcoming value
+    // aList[0] is ready to be overwritten 
     aList[0] = thisPos;
 
     sizeList++;
 }
-
 void objPosArrayList::insertTail(objPos thisPos)
 {
-    if(sizeList == sizeArray)
+    if(sizeList == sizeArray)          // Check if list is full
     {
-        //cout << "array full.."<< endl;            FIXME need somthing to show full?
-        return;
+        return;     // Nothing happens if list is full
     }
     
-    aList[sizeList] = thisPos;
+    aList[sizeList] = thisPos;      // Simply add item to tail index which is also the list size
     sizeList++;
 }
-
 void objPosArrayList::removeHead()
 {
-    //list empty check
-    if (sizeList <= 0)
-    {
-        //cout << "List empty... " << endl;            FIXME need somthing to show full?
-        return;
+    if (sizeList <= 0)      // Check if list has less than or 0 items
+    {   
+        return;     //Nothing happens if list has less than or 0 items
     }
 
     //shuffling forward
@@ -70,36 +52,31 @@ void objPosArrayList::removeHead()
     for (int i = 0; i < (sizeList - 1); i++)
     {
         aList[i] = aList[i+1];
-
-        //lazy deletion
-        //doesnt acutally delete last slot, just makes it effectivley unaccesible by adjusting sizeList size
     }
-    sizeList--;
+    sizeList--;     // Lazy deletion, doesnt acutally delete last slot, just makes it effectivley unaccesible by negativley incrementing list size
 }
-
 void objPosArrayList::removeTail()
 {
-     //list empty chekc
-    if (sizeList <= 0)
-    {
-        //cout << "List empty... " << endl;            FIXME need somthing to show full?
-        return;
+    if (sizeList <= 0)      // Check if list has less than or 0 items
+    {   
+        return;     //Nothing happens if list has less than or 0 items
     }
     
-    //lazy deletion again
-    sizeList--;
+    sizeList--;     // Lazy deletion, doesnt acutally delete last slot, just makes it effectivley unaccesible by negativley incrementing list size
 }
 
+int objPosArrayList::getSize()
+{
+    return sizeList;
+}
 void objPosArrayList::getHeadElement(objPos &returnPos)
 {
     returnPos.setObjPos(aList[0]);
 }
-
 void objPosArrayList::getTailElement(objPos &returnPos)
 {
     returnPos.setObjPos(aList[sizeList - 1]);
 }
-
 void objPosArrayList::getElement(objPos &returnPos, int index)
 {
     returnPos.setObjPos(aList[index]);
