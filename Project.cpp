@@ -160,5 +160,6 @@ void CleanUp()
     delete gameMechanics;
     delete player;
 
-    // Perform any additional cleanup using the game mechanics object proly clear memory
+    //Test
+    
 }
