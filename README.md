@@ -1,12 +1,6 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/gUachAgg)
-# COE2SH4-PPA3Template
-Project Preparation Activity 3
+To make and run game:
 
-You must watch the briefing video and read through the manual to engage in the development activities.
-
-
-Section: L08
-
-MacID: blewl1
-
-StudentID: 400454641
+- Open an integrated terminal with the make file
+- Enter "make clean" into the terminal to make the .exe file
+- To run the .exe, enter "./Project.exe" into the terminal
+- Play the game! :)
